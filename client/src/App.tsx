@@ -1,8 +1,14 @@
+import { Route, Routes } from "react-router-dom";
+import MainLayout from "./components/layouts/MainLayout";
+import { Home } from "lucide-react";
+
 function App() {
   return (
-    <>
-      <h1>Hellow world</h1>
-    </>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+      </Route>
+    </Routes>
   );
 }
 
