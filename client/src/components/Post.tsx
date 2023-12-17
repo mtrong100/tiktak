@@ -33,7 +33,7 @@ const Post = () => {
         <video
           controls
           loop
-          autoPlay
+          // autoPlay
           muted
           src={
             "https://firebasestorage.googleapis.com/v0/b/toktok-clone-780fb.appspot.com/o/videos%2Frksthijerg%20(3).mp4?alt=media&token=0f79db0e-123d-4431-a234-6a798bb6b611"

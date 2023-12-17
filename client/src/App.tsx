@@ -7,6 +7,7 @@ import SecondaryLayout from "./components/layouts/SecondaryLayout";
 import CreatorLayout from "./components/layouts/CreatorLayout";
 import Upload from "./pages/Upload";
 import Manage from "./pages/Manage";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
 
       <Route element={<SecondaryLayout />}>
         <Route path="/explore" element={<Explore />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
 
       <Route element={<CreatorLayout />}>

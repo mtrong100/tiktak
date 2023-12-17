@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth } from "@/utils/firebase";
 import { useToast } from "../ui/use-toast";
 import { oauthLogin } from "@/services/authService";
@@ -55,6 +59,39 @@ export function AuthModal() {
     }
   };
 
+  const handleLoginWithGithub = async () => {
+    const provider = new GithubAuthProvider();
+
+    try {
+      const results = await signInWithPopup(auth, provider);
+      const data = results.user;
+
+      const request: TUserData = {
+        username: data?.displayName,
+        avatar: data?.photoURL,
+        email: data?.email,
+        provider: "github",
+      };
+
+      const res = await oauthLogin(request);
+
+      if (res) {
+        useAuthStore.getState().storeCurrentUser(res?.results);
+        localStorage.setItem("token", JSON.stringify(res?.token));
+        toast({ description: res?.message, duration: 2000 });
+      }
+
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Failed to login. Try again",
+      });
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -76,10 +113,15 @@ export function AuthModal() {
             className="text-lg"
             size="lg"
           >
-            <FaGoogle className="mr-2 h-4 w-4" size={25} /> Google
+            <FaGoogle className="mr-3 h-4 w-4" size={25} /> Continue with Google
           </Button>
-          <Button variant="outline" className="text-lg" size="lg">
-            <FaGithub className="mr-2 h-4 w-4" size={25} /> Github
+          <Button
+            onClick={handleLoginWithGithub}
+            variant="outline"
+            className="text-lg"
+            size="lg"
+          >
+            <FaGithub className="mr-3 h-4 w-4" size={25} /> Continue with Github
           </Button>
         </div>
         <DialogFooter>

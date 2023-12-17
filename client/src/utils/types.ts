@@ -12,6 +12,7 @@ export type TUserData = {
 };
 
 export type TCurrentUser = {
+  _id: string;
   username: string;
   avatar: string;
   email: string;
@@ -41,4 +42,10 @@ export type TComment = {
   post: string;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type TDropdownLinks = {
+  title: string;
+  icon: JSX.Element;
+  link: string;
 };
