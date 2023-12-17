@@ -4,6 +4,13 @@ export type TSidebarLinks = {
   link: string;
 };
 
+export type TUserData = {
+  username: string | null;
+  avatar: string | null;
+  email: string | null;
+  provider: string;
+};
+
 export type TCurrentUser = {
   username: string;
   avatar: string;

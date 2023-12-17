@@ -12,7 +12,12 @@ const app = express();
 const port = process.env.PORT;
 
 // Use libs
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.BASE_URL,
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(bodyParser.json());
 

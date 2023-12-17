@@ -1,10 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {
-  authValidation,
-  emailValidation,
-} from "../validations/authValiation.js";
+import { authValidation } from "../validations/authValiation.js";
 import { errorValdationHandler } from "../utils/errorHandler.js";
 
 // OAuth login
@@ -49,7 +46,7 @@ export const OAuthLogin = async (req, res, next) => {
         token,
       });
     } else {
-      const { error } = emailValidation.validate(req.body);
+      const { error } = authValidation.validate(req.body);
       if (error) {
         const errors = errorValdationHandler(error);
         return res.status(400).json({
