@@ -1,22 +1,43 @@
 import { TSidebarLinks } from "@/utils/types";
-import { AiFillHome } from "react-icons/ai";
-import { FaUserFriends } from "react-icons/fa";
-import { MdExplore } from "react-icons/md";
+import { Compass, Home, List, Upload, Users } from "lucide-react";
 
 export const SidebarLinks: TSidebarLinks[] = [
   {
     name: "For you",
-    icon: <AiFillHome />,
+    icon: <Home />,
     link: "/",
   },
   {
+    name: "Upload",
+    icon: <Upload />,
+    link: "/creator/upload",
+  },
+  {
     name: "Following",
-    icon: <FaUserFriends />,
+    icon: <Users />,
     link: "/following",
   },
   {
     name: "Explore",
-    icon: <MdExplore />,
+    icon: <Compass />,
     link: "/explore",
+  },
+];
+
+export const creatorSidebarLinks: TSidebarLinks[] = [
+  {
+    name: "Home",
+    icon: <Home />,
+    link: "/",
+  },
+  {
+    name: "Upload",
+    icon: <Upload />,
+    link: "/creator/upload",
+  },
+  {
+    name: "Manage",
+    icon: <List />,
+    link: "/creator/manage",
   },
 ];

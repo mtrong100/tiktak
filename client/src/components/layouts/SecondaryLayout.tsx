@@ -3,13 +3,13 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../shared/Sidebar";
 import Header from "../shared/Header";
 
-const MainLayout = () => {
+const SecondaryLayout = () => {
   return (
     <>
       <Header />
       <div className="flex items-start relative">
         <Sidebar />
-        <main className="p-5 w-full  max-w-[690px]  mx-auto">
+        <main className="p-5 w-full">
           <Outlet />
         </main>
       </div>
@@ -17,4 +17,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default SecondaryLayout;

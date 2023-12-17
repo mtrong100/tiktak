@@ -1,7 +1,7 @@
 import Post from "@/components/Post";
 import React from "react";
 
-const Home = () => {
+const Following = () => {
   return (
     <div className="flex flex-col gap-7">
       {Array(6)
@@ -13,4 +13,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Following;

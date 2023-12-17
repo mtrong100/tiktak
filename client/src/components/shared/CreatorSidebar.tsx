@@ -1,15 +1,15 @@
-import { SidebarLinks } from "@/constants/constants";
+import { creatorSidebarLinks } from "@/constants/constants";
 import { TSidebarLinks } from "@/utils/types";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = () => {
+const CreatorSidebar = () => {
   const location = useLocation();
 
   return (
     <aside className="sticky top-[67px] h-[calc(100vh-67px)] bottom-0 w-[260px] bg-card p-3 border-r-2 border-border">
       <ul className="flex flex-col gap-1">
-        {SidebarLinks.map((item: TSidebarLinks) => {
+        {creatorSidebarLinks.map((item: TSidebarLinks) => {
           const isActive = location.pathname === item.link;
 
           return (
@@ -32,4 +32,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default CreatorSidebar;
