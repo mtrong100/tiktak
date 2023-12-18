@@ -4,7 +4,7 @@ import React from "react";
 
 const Home = () => {
   const currentUser = useAuthStore((state) => state.user);
-  console.log(currentUser);
+  // console.log(currentUser);
 
   return (
     <div className="flex flex-col gap-7">

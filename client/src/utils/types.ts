@@ -8,7 +8,14 @@ export type TUserData = {
   username: string | null;
   avatar: string | null;
   email: string | null;
-  provider: string;
+  provider?: string;
+};
+
+export type TUserUpdateData = {
+  username: string | null;
+  city: string | null;
+  gender: string | null;
+  country: string | null;
 };
 
 export type TCurrentUser = {

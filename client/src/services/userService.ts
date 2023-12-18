@@ -1,4 +1,4 @@
-import { TCurrentUser, TUserData } from "@/utils/types";
+import { TCurrentUser, TUserData, TUserUpdateData } from "@/utils/types";
 import axios from "axios";
 
 export const getUserDetail = async (
@@ -14,10 +14,12 @@ export const getUserDetail = async (
 
 export const updateUser = async (
   accessToken: string | null,
-  id: string | undefined
-): Promise<TCurrentUser> => {
-  const res = await axios.get(
+  id: string | undefined,
+  data: TUserUpdateData
+) => {
+  const res = await axios.put(
     `${import.meta.env.VITE_ENDPOINT}/user/update/${id}`,
+    data,
     {
       headers: { token: `Bearer ${accessToken}` },
     }

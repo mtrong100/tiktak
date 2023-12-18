@@ -1,3 +1,4 @@
+import { UserModal } from "@/components/modals/UserModal";
 import { Button } from "@/components/ui/button";
 import { getUserDetail } from "@/services/userService";
 import { TCurrentUser } from "@/utils/types";
@@ -25,7 +26,7 @@ const Profile = () => {
   }, [currentUser?._id]);
 
   return (
-    <section>
+    <section className="px-10">
       <div className="flex items-center gap-8">
         <img
           src={user?.avatar}
@@ -34,22 +35,12 @@ const Profile = () => {
         />
         <div className="flex flex-col gap-1">
           <h1 className="text-[32px] font-bold">{user?.username}</h1>
-          <span className="text-lg font-medium">@{user?.username}</span>
-          {currentUser?._id === user?._id && (
-            <Button className="text-base w-fit" variant="secondary">
-              Edit profile
-            </Button>
-          )}
+          <span className="text-lg font-medium mb-1">@{user?.username}</span>
+          {currentUser?._id === user?._id && <UserModal />}
         </div>
       </div>
 
       <ProfileMeta following={3} followers={6} />
-      <p className="w-full max-w-lg text-sm">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. In hic harum
-        nam quaerat. Debitis, natus iusto sint nesciunt repellendus pariatur
-        saepe quas consequatur architecto neque, sit incidunt. Reiciendis, optio
-        ipsum?
-      </p>
     </section>
   );
 };
@@ -63,7 +54,7 @@ interface Props {
 
 function ProfileMeta({ following, followers }: Props) {
   return (
-    <section className="flex items-center gap-5 mt-4 mb-2">
+    <section className="flex items-center gap-5 mt-5 mb-2">
       <div className="flex items-center gap-1">
         <span className="font-semibold">{following || "0"}</span>
         Following
