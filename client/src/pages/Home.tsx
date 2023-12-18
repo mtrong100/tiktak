@@ -1,4 +1,4 @@
-import Post from "@/components/Post";
+import Post, { PostSkeleton } from "@/components/Post";
 import { getAllPosts } from "@/services/postService";
 import { useAuthStore } from "@/zustand/authStore";
 import { usePostStore } from "@/zustand/postStore";
@@ -23,6 +23,11 @@ const Home = () => {
 
   return (
     <div className="flex flex-col gap-7">
+      {posts.length === 0 &&
+        Array(5)
+          .fill(0)
+          .map((index: number) => <PostSkeleton key={index} />)}
+
       {posts.length > 0 &&
         posts?.map((post) => <Post key={post._id} data={post} />)}
     </div>

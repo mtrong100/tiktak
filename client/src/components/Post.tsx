@@ -4,6 +4,7 @@ import { MessageCircleMore, Share2 } from "lucide-react";
 import { IoBookmark } from "react-icons/io5";
 import { TPost } from "@/utils/types";
 import { format } from "timeago.js";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
   data: TPost;
@@ -67,3 +68,22 @@ const Post = ({ data }: Props) => {
 };
 
 export default Post;
+
+export const PostSkeleton = () => {
+  return (
+    <article className="flex flex-col gap-2">
+      <div className="flex items-start gap-3">
+        <Skeleton className="w-[50px] h-[50px] rounded-full flex-shrink-0" />
+
+        <div className="flex-1">
+          <Skeleton className="w-[200px] h-[25px] rounded-sm" />
+          <Skeleton className="w-[300px] h-[25px] rounded-sm mt-2" />
+        </div>
+      </div>
+
+      <div className="ml-[62px] flex items-end gap-5 mt-2">
+        <Skeleton className=" w-[337px] h-[600px] rounded-md" />
+      </div>
+    </article>
+  );
+};
