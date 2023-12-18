@@ -1,20 +1,19 @@
+import cloudinary from "../configs/cloudinaryConfig.js";
+
 export const uploadVideo = async (req, res, next) => {
+  console.log(req.file);
+
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No video file provided." });
+      return res.status(400).json({ message: "No file provided" });
     }
 
-    cloudinary.uploader
-      .upload_stream({ resource_type: "video" }, (error, result) => {
-        if (error) {
-          return next(error);
-        }
+    const results = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "video",
+      folder: "tiktak-videos",
+    });
 
-        res
-          .status(200)
-          .json({ message: "Video uploaded successfully", data: result });
-      })
-      .end(req.file.buffer);
+    res.status(200).json(results);
   } catch (error) {
     next(error);
   }

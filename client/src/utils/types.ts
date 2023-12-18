@@ -33,10 +33,18 @@ export type TCurrentUser = {
   updatedAt: Date;
 };
 
+export type TPostAuthor = {
+  _id: string;
+  username: string;
+  avatar: string;
+  email: string;
+};
+
 export type TPost = {
+  _id: string;
   content: string;
   video: string;
-  user: string;
+  user: TPostAuthor;
   likes: string[];
   createdAt: Date;
   updatedAt: Date;

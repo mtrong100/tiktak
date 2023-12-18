@@ -39,6 +39,7 @@ export function DropdownMenuDemo() {
         {dropdownLinks.map((item: TDropdownLinks) => {
           return (
             <DropdownMenuItem
+              key={item.title}
               onClick={() => navigate(`${item.link}`)}
               className="h-[45px] text-base cursor-pointer"
             >
