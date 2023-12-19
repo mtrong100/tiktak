@@ -1,9 +1,32 @@
 import { SidebarLinks } from "@/constants/constants";
-import { TSidebarLinks } from "@/utils/types";
+import { TCurrentUser, TSidebarLinks } from "@/utils/types";
 import { Link, useLocation } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import { getAllUsers } from "@/services/userService";
+import UserAccount, { UserAccountSkeleton } from "../UserAccount";
+import { v4 as uuidv4 } from "uuid";
 
 const Sidebar = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState<TCurrentUser[]>([]);
   const location = useLocation();
+
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        setIsLoading(true);
+        const res = await getAllUsers();
+        if (res) setUsers(res);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setUsers([]);
+        setIsLoading(false);
+      }
+    }
+    fetchUsers();
+  }, []);
 
   return (
     <aside className="sticky top-[67px] h-[calc(100vh-67px)] bottom-0 w-[260px] bg-card p-3 border-r-2 border-border">
@@ -27,6 +50,23 @@ const Sidebar = () => {
           );
         })}
       </ul>
+
+      <Separator className="my-3" />
+
+      <div>
+        <h2 className="font-semibold">Recommended users</h2>
+
+        <div className="mt-5 flex flex-col gap-4">
+          {isLoading &&
+            Array(5)
+              .fill(0)
+              .map(() => <UserAccountSkeleton key={uuidv4()} />)}
+
+          {!isLoading &&
+            users.length > 0 &&
+            users?.map((user) => <UserAccount key={user._id} data={user} />)}
+        </div>
+      </div>
     </aside>
   );
 };

@@ -1,4 +1,4 @@
-import { TCurrentUser, TUserData, TUserUpdateData } from "@/utils/types";
+import { TCurrentUser, TUserUpdateData } from "@/utils/types";
 import axios from "axios";
 
 export const getUserDetail = async (
@@ -24,6 +24,12 @@ export const updateUser = async (
       headers: { token: `Bearer ${accessToken}` },
     }
   );
+
+  return res.data;
+};
+
+export const getAllUsers = async () => {
+  const res = await axios.get(`${import.meta.env.VITE_ENDPOINT}/user/all`);
 
   return res.data;
 };

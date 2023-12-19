@@ -1,13 +1,16 @@
+import UserPost, { UserPostSkeleton } from "@/components/UserPost";
 import { UserModal } from "@/components/modals/UserModal";
-import { Button } from "@/components/ui/button";
+import { getUserPosts } from "@/services/postService";
 import { getUserDetail } from "@/services/userService";
-import { TCurrentUser } from "@/utils/types";
-import { useAuthStore } from "@/zustand/authStore";
+import { TCurrentUser, TPost } from "@/utils/types";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Profile = () => {
+  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<TCurrentUser | null>(null);
-  const currentUser = useAuthStore((state) => state.user);
+  const [posts, setPosts] = useState<TPost[]>([]);
 
   useEffect(() => {
     async function fetchDetailUser() {
@@ -15,18 +18,35 @@ const Profile = () => {
       const accessToken: string | null = value ? JSON.parse(value) : null;
 
       try {
-        const res = await getUserDetail(accessToken, currentUser?._id);
+        const res = await getUserDetail(accessToken, id);
         setUser(res);
       } catch (error) {
-        console.log(error);
         setUser(null);
       }
     }
     fetchDetailUser();
-  }, [currentUser?._id]);
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchUserPosts() {
+      const value = localStorage.getItem("token") as string;
+      const accessToken: string = value ? JSON.parse(value) : null;
+
+      try {
+        setIsLoading(true);
+        const res = await getUserPosts(id as string, accessToken);
+        setPosts(res);
+        setIsLoading(false);
+      } catch (error) {
+        setPosts([]);
+        setIsLoading(false);
+      }
+    }
+    fetchUserPosts();
+  }, [id]);
 
   return (
-    <section className="px-10">
+    <section>
       <div className="flex items-center gap-8">
         <img
           src={user?.avatar}
@@ -36,11 +56,22 @@ const Profile = () => {
         <div className="flex flex-col gap-1">
           <h1 className="text-[32px] font-bold">{user?.username}</h1>
           <span className="text-lg font-medium mb-1">@{user?.username}</span>
-          {currentUser?._id === user?._id && <UserModal />}
+          {user?._id === user?._id && <UserModal />}
         </div>
       </div>
 
       <ProfileMeta following={3} followers={6} />
+
+      <div className="mt-8 grid grid-cols-5 gap-2">
+        {isLoading &&
+          Array(5)
+            .fill(0)
+            .map((index: number) => <UserPostSkeleton key={index} />)}
+
+        {!isLoading &&
+          posts?.length > 0 &&
+          posts?.map((post) => <UserPost key={post._id} video={post?.video} />)}
+      </div>
     </section>
   );
 };

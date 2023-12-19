@@ -3,6 +3,7 @@ import { getAllPosts } from "@/services/postService";
 import { useAuthStore } from "@/zustand/authStore";
 import { usePostStore } from "@/zustand/postStore";
 import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -26,7 +27,7 @@ const Home = () => {
       {posts.length === 0 &&
         Array(5)
           .fill(0)
-          .map((index: number) => <PostSkeleton key={index} />)}
+          .map(() => <PostSkeleton key={uuidv4()} />)}
 
       {posts.length > 0 &&
         posts?.map((post) => <Post key={post._id} data={post} />)}

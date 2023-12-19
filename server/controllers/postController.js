@@ -38,11 +38,16 @@ export const toggleLikePost = async (req, res, next) => {
 
     if (post.likes.includes(userId)) {
       post.likes = post.likes.filter((item) => item !== userId);
-      return res.status(200).json({ message: "Unlike post successfully!" });
+      await post.save();
+      return res
+        .status(200)
+        .json({ message: "Unlike post successfully!", results: post });
     } else {
       post.likes.push(userId);
       await post.save();
-      return res.status(200).json({ message: "Like post successfully!" });
+      return res
+        .status(200)
+        .json({ message: "Like post successfully!", results: post });
     }
   } catch (error) {
     next(error);
@@ -90,6 +95,26 @@ export const getPostDetail = async (req, res, next) => {
 export const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.find().populate({
+      path: "user",
+      select: "username avatar email",
+    });
+
+    if (!posts || posts.length === 0) {
+      return next(errorHandler(404, "No posts found!"));
+    }
+
+    return res.status(201).json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get posts from user
+export const getUserPosts = async (req, res, next) => {
+  const id = req.params.id;
+
+  try {
+    const posts = await Post.find({ user: id }).populate({
       path: "user",
       select: "username avatar email",
     });

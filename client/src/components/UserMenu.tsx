@@ -1,4 +1,4 @@
-import { LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut, User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/zustand/authStore";
 import { useNavigate } from "react-router-dom";
-import { dropdownLinks } from "@/constants/constants";
 import { TDropdownLinks } from "@/utils/types";
 
-export function DropdownMenuDemo() {
+export function UserMenu() {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.user);
 
@@ -21,6 +20,19 @@ export function DropdownMenuDemo() {
     useAuthStore.getState().storeCurrentUser(null);
     localStorage.removeItem("user");
   };
+
+  const dropdownLinks: TDropdownLinks[] = [
+    {
+      title: "Profile",
+      icon: <User className="mr-2 h-4 w-4" />,
+      link: `/profile/${currentUser?._id}`,
+    },
+    {
+      title: "Dashboard",
+      icon: <LayoutDashboard className="mr-2 h-4 w-4" />,
+      link: "/creator/upload",
+    },
+  ];
 
   return (
     <DropdownMenu>

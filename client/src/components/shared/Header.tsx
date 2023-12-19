@@ -1,18 +1,14 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../ui/button";
 import { IoMdNotifications } from "react-icons/io";
 import { BiMessageAltMinus } from "react-icons/bi";
 import { Input } from "../ui/input";
 import { ModeToggle } from "../mode-toggle";
 import { AuthModal } from "../modals/AuthModal";
 import { useAuthStore } from "@/zustand/authStore";
-import { UserAvatar } from "../UserAvatar";
-import { DropdownMenuDemo } from "../DropdownMenu";
+import { UserMenu } from "../UserMenu";
 
 const Header = () => {
   const currentUser = useAuthStore((state) => state.user);
-  console.log(currentUser);
 
   return (
     <header className="sticky top-0 z-50 w-full grid items-center grid-cols-3 px-8 h-[67px] border-b-2 bg-card border-border">
@@ -30,7 +26,7 @@ const Header = () => {
           <BiMessageAltMinus />
         </div>
 
-        {currentUser ? <DropdownMenuDemo /> : <AuthModal />}
+        {currentUser ? <UserMenu /> : <AuthModal />}
       </div>
     </header>
   );

@@ -4,7 +4,6 @@ import {
   Home,
   LayoutDashboard,
   List,
-  LogOut,
   Upload,
   User,
   Users,
@@ -43,18 +42,5 @@ export const creatorSidebarLinks: TSidebarLinks[] = [
     name: "Manage",
     icon: <List />,
     link: "/creator/manage",
-  },
-];
-
-export const dropdownLinks: TDropdownLinks[] = [
-  {
-    title: "Profile",
-    icon: <User className="mr-2 h-4 w-4" />,
-    link: "/profile",
-  },
-  {
-    title: "Dashboard",
-    icon: <LayoutDashboard className="mr-2 h-4 w-4" />,
-    link: "/creator/upload",
   },
 ];

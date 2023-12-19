@@ -1,16 +1,36 @@
 import { Button } from "./ui/button";
 import { FaHeart } from "react-icons/fa6";
 import { MessageCircleMore, Share2 } from "lucide-react";
-import { IoBookmark } from "react-icons/io5";
 import { TPost } from "@/utils/types";
 import { format } from "timeago.js";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
+import { getAllPosts, toggleLikePost } from "@/services/postService";
+import { useAuthStore } from "@/zustand/authStore";
+import { usePostStore } from "@/zustand/postStore";
 
 interface Props {
   data: TPost;
 }
 
 const Post = ({ data }: Props) => {
+  const currentUser = useAuthStore((state) => state.user);
+
+  const handleToggleLikePost = async () => {
+    try {
+      const jsonValue: string | null = localStorage.getItem("token");
+      const accessToken: string = jsonValue ? JSON.parse(jsonValue) : null;
+
+      await toggleLikePost(data?._id, accessToken);
+      const res = await getAllPosts();
+      usePostStore.getState().storePosts(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isLiked = data?.likes?.includes(currentUser?._id as string);
+
   return (
     <article className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -22,9 +42,12 @@ const Post = ({ data }: Props) => {
           />
           <div>
             <div className="flex items-center gap-2 text-sm">
-              <h2 className="font-bold capitalize text-base">
+              <Link
+                to={`/profile/${data?.user?._id}`}
+                className="font-bold capitalize text-base"
+              >
                 {data?.user?.username}
-              </h2>
+              </Link>
               <span>.</span>
               <span>{format(data?.createdAt)}</span>
             </div>
@@ -49,14 +72,16 @@ const Post = ({ data }: Props) => {
 
         {/* Post action */}
         <section className="flex flex-col gap-3">
-          <Button variant="outline" size="icon" className="rounded-full">
-            <FaHeart className="h-5 w-5 " />
+          <Button
+            onClick={handleToggleLikePost}
+            variant={isLiked ? "default" : "outline"}
+            size="icon"
+            className="rounded-full"
+          >
+            <FaHeart className="h-5 w-5" />
           </Button>
           <Button variant="outline" size="icon" className="rounded-full">
             <MessageCircleMore className="h-5 w-5 " />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-full">
-            <IoBookmark className="h-5 w-5 " />
           </Button>
           <Button variant="outline" size="icon" className="rounded-full">
             <Share2 className="h-5 w-5 " />

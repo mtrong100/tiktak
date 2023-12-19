@@ -19,7 +19,7 @@ function App() {
 
       <Route element={<SecondaryLayout />}>
         <Route path="/explore" element={<Explore />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<Profile />} />
       </Route>
 
       <Route element={<CreatorLayout />}>
