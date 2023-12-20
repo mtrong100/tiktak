@@ -70,4 +70,16 @@
     width: 1px;
     white-space: nowrap;
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-[5px];
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-card;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-secondary;
+  }
 }

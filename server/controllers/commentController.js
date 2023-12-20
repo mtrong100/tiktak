@@ -31,7 +31,6 @@ export const createComment = async (req, res, next) => {
 // Update comment
 export const updateComment = async (req, res, next) => {
   const { id } = req.params;
-  const { content, image } = req.body;
 
   try {
     const { error } = updateCommmentValidation.validate(req.body);
@@ -45,10 +44,6 @@ export const updateComment = async (req, res, next) => {
     const updatedComment = await Comment.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-
-    if (!updateComment) {
-      return next(errorHandler(404, "Comment not found!"));
-    }
 
     return res.status(200).json({
       message: "Update comment successfully!",
@@ -64,7 +59,7 @@ export const deleteComment = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const comment = await Comment.findById(id);
+    const comment = await Comment.findByIdAndDelete(id);
 
     if (!comment) {
       return next(errorHandler(404, "Comment not found!"));
@@ -80,15 +75,13 @@ export const deleteComment = async (req, res, next) => {
 
 // Get all comments
 export const getAllComments = async (req, res, next) => {
+  const id = req.params.id;
+
   try {
-    const comments = await Comment.find().populate({
+    const comments = await Comment.find({ post: id }).populate({
       path: "user",
       select: "username avatar email",
     });
-
-    if (!comments || comments.length === 0) {
-      return next(errorHandler(404, "No comments found!"));
-    }
 
     return res.status(201).json(comments);
   } catch (error) {

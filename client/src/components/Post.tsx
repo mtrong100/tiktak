@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { getAllPosts, toggleLikePost } from "@/services/postService";
 import { useAuthStore } from "@/zustand/authStore";
 import { usePostStore } from "@/zustand/postStore";
+import { SheetComment } from "./SheetComment";
 
 interface Props {
   data: TPost;
@@ -16,6 +17,7 @@ interface Props {
 const Post = ({ data }: Props) => {
   const currentUser = useAuthStore((state) => state.user);
 
+  // Handle toggle like post
   const handleToggleLikePost = async () => {
     try {
       const jsonValue: string | null = localStorage.getItem("token");
@@ -80,9 +82,7 @@ const Post = ({ data }: Props) => {
           >
             <FaHeart className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full">
-            <MessageCircleMore className="h-5 w-5 " />
-          </Button>
+          <SheetComment postId={data?._id} />
           <Button variant="outline" size="icon" className="rounded-full">
             <Share2 className="h-5 w-5 " />
           </Button>

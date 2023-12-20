@@ -9,7 +9,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 
-router.get("/all", getAllComments);
+router.get("/post/:id", getAllComments);
 router.post("/create", verifyToken, createComment);
 router.put("/update/:id", verifyToken, updateComment);
 router.delete("/delete/:id", verifyToken, deleteComment);

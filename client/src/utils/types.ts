@@ -51,9 +51,10 @@ export type TPost = {
 };
 
 export type TComment = {
+  _id: string;
   content: string;
   image?: string;
-  user: string;
+  user: TPostAuthor;
   post: string;
   createdAt: Date;
   updatedAt: Date;
@@ -63,4 +64,11 @@ export type TDropdownLinks = {
   title: string;
   icon: JSX.Element;
   link: string;
+};
+
+export type TCommentData = {
+  content: string;
+  image?: string;
+  user: string;
+  post: string;
 };

@@ -21,7 +21,7 @@ export const commentValidation = Joi.object({
 }).options({ abortEarly: false });
 
 export const updateCommmentValidation = Joi.object({
-  content: Joi.string().required().min(5).max(500).messages({
+  content: Joi.string().required().min(1).max(500).messages({
     "any.required": "Content is required.",
     "string.base": "Content must be a string.",
     "string.min": "Content must be at least {#limit} characters long.",
