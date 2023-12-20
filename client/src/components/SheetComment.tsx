@@ -142,37 +142,39 @@ export function SheetComment({ postId }: Props) {
                     <p className="text-sm">{item?.content}</p>
                   </div>
 
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="iconSmall"
-                        className="rounded-full flex-shrink-0"
-                      >
-                        <MoreHorizontal className="h-5 w-5 " />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="lg:w-32 p-0">
-                      <div className="flex flex-col">
-                        <div
-                          onClick={() =>
-                            handleUpdateClick(item?.content, item?._id)
-                          }
-                          className="flex items-center gap-2 h-[40px] hover:bg-muted px-5 cursor-pointer"
+                  {currentUser?._id === item?.user._id && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="iconSmall"
+                          className="rounded-full flex-shrink-0"
                         >
-                          <Pencil size={18} />
-                          Edit
+                          <MoreHorizontal className="h-5 w-5 " />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="lg:w-32 p-0">
+                        <div className="flex flex-col">
+                          <div
+                            onClick={() =>
+                              handleUpdateClick(item?.content, item?._id)
+                            }
+                            className="flex items-center gap-2 h-[40px] hover:bg-muted px-5 cursor-pointer"
+                          >
+                            <Pencil size={18} />
+                            Edit
+                          </div>
+                          <div
+                            onClick={() => handleDeleteComment(item?._id)}
+                            className="flex items-center gap-2 h-[40px] hover:bg-muted px-5 cursor-pointer"
+                          >
+                            <Trash2 size={18} />
+                            Delete
+                          </div>
                         </div>
-                        <div
-                          onClick={() => handleDeleteComment(item?._id)}
-                          className="flex items-center gap-2 h-[40px] hover:bg-muted px-5 cursor-pointer"
-                        >
-                          <Trash2 size={18} />
-                          Delete
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                      </PopoverContent>
+                    </Popover>
+                  )}
                 </div>
               ))}
           </div>
