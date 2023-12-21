@@ -115,7 +115,7 @@ export function SheetComment({ postId }: Props) {
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full">
-          <MessageCircleMore className="h-5 w-5 " />
+          <MessageCircleMore className="h-6 w-6" />
         </Button>
       </SheetTrigger>
 

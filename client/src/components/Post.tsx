@@ -1,14 +1,15 @@
-import { Button } from "./ui/button";
-import { FaHeart } from "react-icons/fa6";
-import { MessageCircleMore, Share2 } from "lucide-react";
+import { usePostStore } from "@/zustand/postStore";
+import { useAuthStore } from "@/zustand/authStore";
 import { TPost } from "@/utils/types";
-import { format } from "timeago.js";
+import { toast } from "./ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SheetComment } from "./SheetComment";
 import { Link } from "react-router-dom";
 import { getAllPosts, toggleLikePost } from "@/services/postService";
-import { useAuthStore } from "@/zustand/authStore";
-import { usePostStore } from "@/zustand/postStore";
-import { SheetComment } from "./SheetComment";
+import { format } from "timeago.js";
+import { followUser, getUserDetail } from "@/services/userService";
+import { FaHeart } from "react-icons/fa6";
+import { Button } from "./ui/button";
 
 interface Props {
   data: TPost;
@@ -28,10 +29,36 @@ const Post = ({ data }: Props) => {
       usePostStore.getState().storePosts(res);
     } catch (error) {
       console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+      });
+    }
+  };
+
+  // Handle follow or unfollow a user
+  const handleToggleFollowUser = async (id: string) => {
+    try {
+      const jsonValue: string | null = localStorage.getItem("token");
+      const accessToken: string = jsonValue ? JSON.parse(jsonValue) : null;
+
+      const res = await followUser(id, accessToken);
+      const response = await getUserDetail(accessToken, currentUser?._id);
+      useAuthStore.getState().storeCurrentUser(response);
+      toast({ description: res?.message, duration: 2000 });
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+      });
     }
   };
 
   const isLiked = data?.likes?.includes(currentUser?._id as string);
+  const isFollowed = currentUser?.following?.includes(
+    data?.user?._id as string
+  );
 
   return (
     <article className="flex flex-col gap-2">
@@ -57,12 +84,18 @@ const Post = ({ data }: Props) => {
           </div>
         </div>
 
-        <Button className="text-base" variant="primaryOutline">
-          Follow
-        </Button>
+        {currentUser && currentUser?._id !== data?.user?._id && (
+          <Button
+            onClick={() => handleToggleFollowUser(data?.user?._id)}
+            className="text-base"
+            variant={isFollowed ? "primaryOutline" : "default"}
+          >
+            {isFollowed ? "Following" : "Follow"}
+          </Button>
+        )}
       </div>
 
-      <div className="ml-[62px] flex items-end gap-5 mt-2">
+      <div className="ml-[62px] flex items-center gap-5 mt-2">
         <video
           controls
           loop
@@ -83,9 +116,6 @@ const Post = ({ data }: Props) => {
             <FaHeart className="h-5 w-5" />
           </Button>
           <SheetComment postId={data?._id} />
-          <Button variant="outline" size="icon" className="rounded-full">
-            <Share2 className="h-5 w-5 " />
-          </Button>
         </section>
       </div>
     </article>

@@ -1,16 +1,17 @@
 import UserPost, { UserPostSkeleton } from "@/components/UserPost";
 import { UserModal } from "@/components/modals/UserModal";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { TCurrentUser, TPost } from "@/utils/types";
 import { getUserPosts } from "@/services/postService";
 import { getUserDetail } from "@/services/userService";
-import { TCurrentUser, TPost } from "@/utils/types";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 const Profile = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<TCurrentUser | null>(null);
   const [posts, setPosts] = useState<TPost[]>([]);
+  console.log(user);
 
   useEffect(() => {
     async function fetchDetailUser() {
@@ -60,7 +61,10 @@ const Profile = () => {
         </div>
       </div>
 
-      <ProfileMeta following={3} followers={6} />
+      <ProfileMeta
+        following={user?.following?.length as number}
+        followers={user?.followers?.length as number}
+      />
 
       <div className="mt-8 grid grid-cols-5 gap-2">
         {isLoading &&
@@ -87,11 +91,11 @@ function ProfileMeta({ following, followers }: Props) {
   return (
     <section className="flex items-center gap-5 mt-5 mb-2">
       <div className="flex items-center gap-1">
-        <span className="font-semibold">{following || "0"}</span>
+        <span className="font-semibold">{following || 0}</span>
         Following
       </div>
       <div className="flex items-center gap-2">
-        <span className="font-semibold">{followers || "0"}</span>
+        <span className="font-semibold">{followers || 0}</span>
         Followers
       </div>
     </section>

@@ -1,9 +1,9 @@
 import Post, { PostSkeleton } from "@/components/Post";
-import { getAllPosts } from "@/services/postService";
-import { useAuthStore } from "@/zustand/authStore";
-import { usePostStore } from "@/zustand/postStore";
-import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { usePostStore } from "@/zustand/postStore";
+import { useEffect } from "react";
+import { useAuthStore } from "@/zustand/authStore";
+import { getAllPosts } from "@/services/postService";
 
 const Home = () => {
   const currentUser = useAuthStore((state) => state.user);

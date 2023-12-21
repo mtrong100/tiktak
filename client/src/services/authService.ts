@@ -1,7 +1,7 @@
 import { TCurrentUser, TUserData } from "@/utils/types";
 import axios from "axios";
 
-export const oauthLogin = async (data: TUserData): Promise<TCurrentUser> => {
+export const oauthLogin = async (data: TUserData) => {
   const res = await axios.post(
     `${import.meta.env.VITE_ENDPOINT}/auth/login`,
     data

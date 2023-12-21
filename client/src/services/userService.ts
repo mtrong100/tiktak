@@ -33,3 +33,15 @@ export const getAllUsers = async () => {
 
   return res.data;
 };
+
+export const followUser = async (id: string, accessToken: string) => {
+  const res = await axios.post(
+    `${import.meta.env.VITE_ENDPOINT}/user/follow/${id}`,
+    {},
+    {
+      headers: { token: `Bearer ${accessToken}` },
+    }
+  );
+
+  return res.data;
+};
