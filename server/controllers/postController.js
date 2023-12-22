@@ -93,17 +93,18 @@ export const getPostDetail = async (req, res, next) => {
 
 // Get all posts
 export const getAllPosts = async (req, res, next) => {
-  try {
-    const posts = await Post.find().populate({
-      path: "user",
-      select: "username avatar email",
-    });
+  const { page = 1, limit = 4 } = req.query;
 
-    if (!posts || posts.length === 0) {
-      return next(errorHandler(404, "No posts found!"));
+  try {
+    const options = { page, limit, sort: { createdAt: -1 } };
+
+    const data = await Post.paginate({}, options);
+
+    if (!data.docs || data.docs.length === 0) {
+      next(errorHandler(404, "Posts not found"));
     }
 
-    return res.status(201).json(posts);
+    return res.status(201).json(data);
   } catch (error) {
     next(error);
   }

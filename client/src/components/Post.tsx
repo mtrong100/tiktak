@@ -1,4 +1,4 @@
-import { usePostStore } from "@/zustand/postStore";
+import useGetUserDetail from "@/hooks/useGetUserDetai";
 import { useAuthStore } from "@/zustand/authStore";
 import { TPost } from "@/utils/types";
 import { toast } from "./ui/use-toast";
@@ -13,10 +13,12 @@ import { Button } from "./ui/button";
 
 interface Props {
   data: TPost;
+  setPosts: (data: TPost[]) => void;
 }
 
-const Post = ({ data }: Props) => {
+const Post = ({ data, setPosts = () => {} }: Props) => {
   const currentUser = useAuthStore((state) => state.user);
+  const { user } = useGetUserDetail(data?.user);
 
   // Handle toggle like post
   const handleToggleLikePost = async () => {
@@ -26,7 +28,7 @@ const Post = ({ data }: Props) => {
 
       await toggleLikePost(data?._id, accessToken);
       const res = await getAllPosts();
-      usePostStore.getState().storePosts(res);
+      setPosts(res?.docs);
     } catch (error) {
       console.log(error);
       toast({
@@ -56,26 +58,24 @@ const Post = ({ data }: Props) => {
   };
 
   const isLiked = data?.likes?.includes(currentUser?._id as string);
-  const isFollowed = currentUser?.following?.includes(
-    data?.user?._id as string
-  );
+  const isFollowed = currentUser?.following?.includes(user?._id as string);
 
   return (
     <article className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="flex items-start gap-3">
           <img
-            src={data?.user?.avatar}
+            src={user?.avatar}
             alt="user-avatar"
             className="object-cover w-[50px] h-[50px] rounded-full flex-shrink-0"
           />
           <div>
             <div className="flex items-center gap-2 text-sm">
               <Link
-                to={`/profile/${data?.user?._id}`}
+                to={`/profile/${user?._id}`}
                 className="font-bold capitalize text-base"
               >
-                {data?.user?.username}
+                {user?.username}
               </Link>
               <span>.</span>
               <span>{format(data?.createdAt)}</span>
@@ -84,9 +84,9 @@ const Post = ({ data }: Props) => {
           </div>
         </div>
 
-        {currentUser && currentUser?._id !== data?.user?._id && (
+        {currentUser && currentUser?._id !== user?._id && (
           <Button
-            onClick={() => handleToggleFollowUser(data?.user?._id)}
+            onClick={() => handleToggleFollowUser(user?._id as string)}
             className="text-base"
             variant={isFollowed ? "primaryOutline" : "default"}
           >

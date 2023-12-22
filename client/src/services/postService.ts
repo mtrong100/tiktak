@@ -18,8 +18,10 @@ export const createPost = async (data: TPostData, accessToken: string) => {
   return res.data;
 };
 
-export const getAllPosts = async () => {
-  const res = await axios.get(`${import.meta.env.VITE_ENDPOINT}/post/all`);
+export const getAllPosts = async (page = 1, limit = 4) => {
+  const res = await axios.get(
+    `${import.meta.env.VITE_ENDPOINT}/post/all?page=${page}&limit=${limit}`
+  );
 
   return res.data;
 };

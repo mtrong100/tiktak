@@ -11,7 +11,6 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<TCurrentUser | null>(null);
   const [posts, setPosts] = useState<TPost[]>([]);
-  console.log(user);
 
   useEffect(() => {
     async function fetchDetailUser() {

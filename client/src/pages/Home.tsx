@@ -1,36 +1,53 @@
-import Post, { PostSkeleton } from "@/components/Post";
-import { v4 as uuidv4 } from "uuid";
-import { usePostStore } from "@/zustand/postStore";
-import { useEffect } from "react";
-import { useAuthStore } from "@/zustand/authStore";
+import Post from "@/components/Post";
+import { useEffect, useState } from "react";
 import { getAllPosts } from "@/services/postService";
+import { TPost } from "@/utils/types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Home = () => {
-  const currentUser = useAuthStore((state) => state.user);
-  const posts = usePostStore((state) => state.post);
-  // console.log(currentUser);
+  const [posts, setPosts] = useState<TPost[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    async function fetchPost() {
-      try {
-        const res = await getAllPosts();
-        if (res) usePostStore.getState().storePosts(res);
-      } catch (error) {
-        console.log(error);
-      }
+    async function fetchPosts() {
+      const res = await getAllPosts();
+      setTotal(res?.totalDocs);
+      setPosts(res?.docs);
     }
-    fetchPost();
+    fetchPosts();
   }, []);
 
-  return (
-    <div className="flex flex-col gap-7">
-      {posts.length === 0 &&
-        Array(5)
-          .fill(0)
-          .map(() => <PostSkeleton key={uuidv4()} />)}
+  const fetchMorePosts = async () => {
+    if (posts?.length < total) {
+      const nextPage = page + 1;
+      const res = await getAllPosts(nextPage, 4);
+      setPosts([...posts, ...res.docs]);
+      setPage(nextPage);
+    } else {
+      setHasMore(false);
+    }
+  };
 
-      {posts.length > 0 &&
-        posts?.map((post) => <Post key={post._id} data={post} />)}
+  return (
+    <div>
+      <InfiniteScroll
+        dataLength={posts?.length}
+        next={fetchMorePosts}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        {posts?.length > 0 &&
+          posts?.map((post) => (
+            <Post key={post._id} data={post} setPosts={setPosts} />
+          ))}
+      </InfiniteScroll>
     </div>
   );
 };

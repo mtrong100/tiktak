@@ -44,7 +44,7 @@ export type TPost = {
   _id: string;
   content: string;
   video: string;
-  user: TPostAuthor;
+  user: string;
   likes: string[];
   createdAt: Date;
   updatedAt: Date;
