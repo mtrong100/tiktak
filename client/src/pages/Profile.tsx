@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from "uuid";
 import { queryParams } from "@/constants/constants";
 import useGetUserDetail from "@/hooks/useGetUserDetail";
 
+const LIMIT: number = 10;
+
 const Profile = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,7 +27,7 @@ const Profile = () => {
           id as string,
           accessToken,
           queryParams.PAGE,
-          10
+          LIMIT
         );
         setPosts(res?.results);
         setIsLoading(false);

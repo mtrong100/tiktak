@@ -99,7 +99,7 @@ const Post = ({ data, setPosts = () => {} }: Props) => {
         <video
           controls
           loop
-          // autoPlay
+          autoPlay
           muted
           src={data?.video}
           className="max-h-[600px] rounded-md"

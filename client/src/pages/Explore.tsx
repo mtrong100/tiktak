@@ -2,7 +2,7 @@ import PostItem from "@/components/PostItem";
 import { queryParams } from "@/constants/constants";
 import { getAllPosts } from "@/services/postService";
 import { TPost } from "@/utils/types";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const LIMIT: number = 8;
@@ -13,6 +13,7 @@ const Explore = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [total, setTotal] = useState<number>(0);
 
+  // Fetching post and render
   useEffect(() => {
     async function fetchPosts() {
       const res = await getAllPosts(queryParams.PAGE, LIMIT);

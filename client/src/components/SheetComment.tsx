@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuthStore } from "@/zustand/authStore";
+import { TComment, TCommentData } from "@/utils/types";
+import { Separator } from "@/components/ui/separator";
 import {
   createComment,
   deleteComment,
   getAllComments,
   updateComment,
 } from "@/services/postService";
-import { useAuthStore } from "@/zustand/authStore";
-import { TComment, TCommentData } from "@/utils/types";
-import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -44,6 +44,7 @@ export function SheetComment({ postId }: Props) {
   const [updateId, setUpdateId] = useState<string | null>(null);
   const [isUpdateComment, setIsUpdateComment] = useState<boolean>(false);
 
+  // Fetching comments and display
   useEffect(() => {
     async function fetchComments() {
       try {
@@ -60,6 +61,7 @@ export function SheetComment({ postId }: Props) {
     fetchComments();
   }, [postId]);
 
+  // Send comment in post
   const handleSendComment = async () => {
     if (!content.trim()) return;
 
@@ -93,6 +95,7 @@ export function SheetComment({ postId }: Props) {
     }
   };
 
+  // Delete comment in post
   const handleDeleteComment = async (id: string) => {
     try {
       const jsonValue: string | null = localStorage.getItem("token");
@@ -105,6 +108,7 @@ export function SheetComment({ postId }: Props) {
     }
   };
 
+  // Listen update event
   const handleUpdateClick = (text: string, id: string) => {
     setIsUpdateComment(true);
     setContent(text);
