@@ -4,6 +4,8 @@ import { getAllPosts } from "@/services/postService";
 import { TPost } from "@/utils/types";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+const LIMIT: number = 4;
+
 const Home = () => {
   const [posts, setPosts] = useState<TPost[]>([]);
   const [page, setPage] = useState(1);
@@ -13,8 +15,8 @@ const Home = () => {
   useEffect(() => {
     async function fetchPosts() {
       const res = await getAllPosts();
-      setTotal(res?.totalDocs);
-      setPosts(res?.docs);
+      setTotal(res?.totalPosts);
+      setPosts(res?.results);
     }
     fetchPosts();
   }, []);
@@ -22,8 +24,8 @@ const Home = () => {
   const fetchMorePosts = async () => {
     if (posts?.length < total) {
       const nextPage = page + 1;
-      const res = await getAllPosts(nextPage, 4);
-      setPosts([...posts, ...res.docs]);
+      const res = await getAllPosts(nextPage, LIMIT);
+      setPosts([...posts, ...res.results]);
       setPage(nextPage);
     } else {
       setHasMore(false);

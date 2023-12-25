@@ -1,13 +1,5 @@
-import { TDropdownLinks, TSidebarLinks } from "@/utils/types";
-import {
-  Compass,
-  Home,
-  LayoutDashboard,
-  List,
-  Upload,
-  User,
-  Users,
-} from "lucide-react";
+import { TQueryParams, TSidebarLinks } from "@/utils/types";
+import { Compass, Home, List, Upload, Users } from "lucide-react";
 
 export const SidebarLinks: TSidebarLinks[] = [
   {
@@ -44,3 +36,8 @@ export const creatorSidebarLinks: TSidebarLinks[] = [
     link: "/creator/manage",
   },
 ];
+
+export const queryParams: TQueryParams = {
+  PAGE: 1,
+  LIMIT: 4,
+};

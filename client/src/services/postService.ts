@@ -1,3 +1,4 @@
+import { queryParams } from "@/constants/constants";
 import { TCommentData } from "@/utils/types";
 import axios from "axios";
 
@@ -18,17 +19,47 @@ export const createPost = async (data: TPostData, accessToken: string) => {
   return res.data;
 };
 
-export const getAllPosts = async (page = 1, limit = 4) => {
+export const getAllPosts = async (
+  page = queryParams.PAGE,
+  limit = queryParams.LIMIT
+) => {
   const res = await axios.get(
-    `${import.meta.env.VITE_ENDPOINT}/post/all?page=${page}&limit=${limit}`
+    `${
+      import.meta.env.VITE_ENDPOINT
+    }/post/all?page=${page}&limit=${limit}&sort=desc`
   );
 
   return res.data;
 };
 
-export const getUserPosts = async (id: string, accessToken: string) => {
+export const getUserPosts = async (
+  id: string,
+  accessToken: string,
+  page = queryParams.PAGE,
+  limit = queryParams.LIMIT
+) => {
   const res = await axios.get(
-    `${import.meta.env.VITE_ENDPOINT}/post/user/${id}`,
+    `${
+      import.meta.env.VITE_ENDPOINT
+    }/post/user/${id}?page=${page}&limit=${limit}&sort=desc`,
+    {
+      headers: { token: `Bearer ${accessToken}` },
+    }
+  );
+
+  return res.data;
+};
+
+export const getUserFollowingPosts = async (
+  id: string,
+  accessToken: string,
+  page = queryParams.PAGE,
+  limit = queryParams.LIMIT
+) => {
+  const res = await axios.get(
+    `${
+      import.meta.env.VITE_ENDPOINT
+    }/post/following/${id}?page=${page}&limit=${limit}&sort=desc`,
     {
       headers: { token: `Bearer ${accessToken}` },
     }

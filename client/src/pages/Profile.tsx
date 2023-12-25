@@ -2,30 +2,17 @@ import UserPost, { UserPostSkeleton } from "@/components/UserPost";
 import { UserModal } from "@/components/modals/UserModal";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { TCurrentUser, TPost } from "@/utils/types";
+import { TPost } from "@/utils/types";
 import { getUserPosts } from "@/services/postService";
-import { getUserDetail } from "@/services/userService";
+import { v4 as uuidv4 } from "uuid";
+import { queryParams } from "@/constants/constants";
+import useGetUserDetail from "@/hooks/useGetUserDetail";
 
 const Profile = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<TCurrentUser | null>(null);
   const [posts, setPosts] = useState<TPost[]>([]);
-
-  useEffect(() => {
-    async function fetchDetailUser() {
-      const value = localStorage.getItem("token");
-      const accessToken: string | null = value ? JSON.parse(value) : null;
-
-      try {
-        const res = await getUserDetail(accessToken, id);
-        setUser(res);
-      } catch (error) {
-        setUser(null);
-      }
-    }
-    fetchDetailUser();
-  }, [id]);
+  const { user } = useGetUserDetail(id as string);
 
   useEffect(() => {
     async function fetchUserPosts() {
@@ -34,8 +21,13 @@ const Profile = () => {
 
       try {
         setIsLoading(true);
-        const res = await getUserPosts(id as string, accessToken);
-        setPosts(res);
+        const res = await getUserPosts(
+          id as string,
+          accessToken,
+          queryParams.PAGE,
+          10
+        );
+        setPosts(res?.results);
         setIsLoading(false);
       } catch (error) {
         setPosts([]);
@@ -69,7 +61,7 @@ const Profile = () => {
         {isLoading &&
           Array(5)
             .fill(0)
-            .map((index: number) => <UserPostSkeleton key={index} />)}
+            .map(() => <UserPostSkeleton key={uuidv4()} />)}
 
         {!isLoading &&
           posts?.length > 0 &&

@@ -44,7 +44,7 @@ export type TPost = {
   _id: string;
   content: string;
   video: string;
-  user: string;
+  user: TPostAuthor;
   likes: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -71,4 +71,9 @@ export type TCommentData = {
   image?: string;
   user: string;
   post: string;
+};
+
+export type TQueryParams = {
+  PAGE: number;
+  LIMIT: number;
 };

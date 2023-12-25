@@ -1,4 +1,3 @@
-import useGetUserDetail from "@/hooks/useGetUserDetai";
 import { useAuthStore } from "@/zustand/authStore";
 import { TPost } from "@/utils/types";
 import { toast } from "./ui/use-toast";
@@ -18,7 +17,6 @@ interface Props {
 
 const Post = ({ data, setPosts = () => {} }: Props) => {
   const currentUser = useAuthStore((state) => state.user);
-  const { user } = useGetUserDetail(data?.user);
 
   // Handle toggle like post
   const handleToggleLikePost = async () => {
@@ -58,24 +56,26 @@ const Post = ({ data, setPosts = () => {} }: Props) => {
   };
 
   const isLiked = data?.likes?.includes(currentUser?._id as string);
-  const isFollowed = currentUser?.following?.includes(user?._id as string);
+  const isFollowed = currentUser?.following?.includes(
+    data?.user?._id as string
+  );
 
   return (
     <article className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="flex items-start gap-3">
           <img
-            src={user?.avatar}
+            src={data?.user?.avatar}
             alt="user-avatar"
             className="object-cover w-[50px] h-[50px] rounded-full flex-shrink-0"
           />
           <div>
             <div className="flex items-center gap-2 text-sm">
               <Link
-                to={`/profile/${user?._id}`}
+                to={`/profile/${data?.user?._id}`}
                 className="font-bold capitalize text-base"
               >
-                {user?.username}
+                {data?.user?.username}
               </Link>
               <span>.</span>
               <span>{format(data?.createdAt)}</span>
@@ -84,9 +84,9 @@ const Post = ({ data, setPosts = () => {} }: Props) => {
           </div>
         </div>
 
-        {currentUser && currentUser?._id !== user?._id && (
+        {currentUser && currentUser?._id !== data?.user?._id && (
           <Button
-            onClick={() => handleToggleFollowUser(user?._id as string)}
+            onClick={() => handleToggleFollowUser(data?.user?._id as string)}
             className="text-base"
             variant={isFollowed ? "primaryOutline" : "default"}
           >

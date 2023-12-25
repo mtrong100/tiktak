@@ -1,4 +1,5 @@
 import Post from "../models/postModel.js";
+import User from "../models/userModel.js";
 import { errorValdationHandler } from "../utils/errorHandler.js";
 import { postValidation } from "../validations/postValidtion.js";
 
@@ -96,15 +97,29 @@ export const getAllPosts = async (req, res, next) => {
   const { page = 1, limit = 4 } = req.query;
 
   try {
-    const options = { page, limit, sort: { createdAt: -1 } };
+    const parsedLimit = parseInt(limit);
+    const parsedPage = parseInt(page);
+    const skip = (parsedPage - 1) * parsedLimit;
 
-    const data = await Post.paginate({}, options);
+    const posts = await Post.find()
+      .populate({
+        path: "user",
+        select: "username avatar email",
+      })
+      .limit(parsedLimit)
+      .skip(skip)
+      .sort({ createdAt: -1 });
 
-    if (!data.docs || data.docs.length === 0) {
-      next(errorHandler(404, "Posts not found"));
+    const totalPosts = await Post.countDocuments();
+
+    if (!posts || posts.length === 0) {
+      return next(errorHandler(404, "Posts not found"));
     }
 
-    return res.status(201).json(data);
+    return res.status(200).json({
+      totalPosts,
+      results: posts,
+    });
   } catch (error) {
     next(error);
   }
@@ -113,18 +128,77 @@ export const getAllPosts = async (req, res, next) => {
 // Get posts from user
 export const getUserPosts = async (req, res, next) => {
   const id = req.params.id;
+  const { page = 1, limit = 4 } = req.query;
 
   try {
-    const posts = await Post.find({ user: id }).populate({
-      path: "user",
-      select: "username avatar email",
-    });
+    const parsedLimit = parseInt(limit);
+    const parsedPage = parseInt(page);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const posts = await Post.find({ user: id })
+      .populate({
+        path: "user",
+        select: "username avatar email",
+      })
+      .limit(parsedLimit)
+      .skip(skip)
+      .sort({ createdAt: -1 });
+
+    const totalPosts = await Post.countDocuments({ user: id });
 
     if (!posts || posts.length === 0) {
       return next(errorHandler(404, "No posts found!"));
     }
 
-    return res.status(201).json(posts);
+    return res.status(200).json({
+      totalPosts,
+      results: posts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get posts from user's following list
+export const getUserFollowingPosts = async (req, res, next) => {
+  const userId = req.params.id;
+  const { page = 1, limit = 4 } = req.query;
+
+  try {
+    const parsedLimit = parseInt(limit);
+    const parsedPage = parseInt(page);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return next(errorHandler(404, "User not found!"));
+    }
+
+    const following = user.following;
+
+    // Find posts from users in the following list
+    const posts = await Post.find({ user: { $in: following } })
+      .populate({
+        path: "user",
+        select: "username avatar email",
+      })
+      .limit(parsedLimit)
+      .skip(skip)
+      .sort({ createdAt: -1 });
+
+    const totalPosts = await Post.countDocuments({ user: { $in: following } });
+
+    if (!posts || posts.length === 0) {
+      return next(
+        errorHandler(404, "No posts found from users you are following!")
+      );
+    }
+
+    return res.status(200).json({
+      totalPosts,
+      results: posts,
+    });
   } catch (error) {
     next(error);
   }
