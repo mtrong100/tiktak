@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { getAllPosts } from "@/services/postService";
 import { TPost } from "@/utils/types";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useAuthStore } from "@/zustand/authStore";
 
 const LIMIT: number = 4;
 
 const Home = () => {
+  const currentUser = useAuthStore((state) => state.user);
   const [posts, setPosts] = useState<TPost[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState<boolean>(true);

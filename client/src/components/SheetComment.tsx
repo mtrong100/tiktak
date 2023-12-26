@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/zustand/authStore";
-import { TComment, TCommentData } from "@/utils/types";
+import { TCommentData } from "@/utils/types";
 import { Separator } from "@/components/ui/separator";
 import {
   createComment,
@@ -30,6 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import useGetCommentsInPost from "@/hooks/useGetCommentsInPost";
 
 interface Props {
   postId: string;
@@ -38,28 +39,10 @@ interface Props {
 export function SheetComment({ postId }: Props) {
   const currentUser = useAuthStore((state) => state.user);
   const [isSending, setIsSending] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [comments, setComments] = useState<TComment[]>([]);
   const [content, setContent] = useState<string>("");
   const [updateId, setUpdateId] = useState<string | null>(null);
   const [isUpdateComment, setIsUpdateComment] = useState<boolean>(false);
-
-  // Fetching comments and display
-  useEffect(() => {
-    async function fetchComments() {
-      try {
-        setIsLoading(true);
-        const res = await getAllComments(postId);
-        if (res) setComments(res);
-        setIsLoading(false);
-      } catch (error) {
-        setComments([]);
-        setIsLoading(false);
-      }
-    }
-
-    fetchComments();
-  }, [postId]);
+  const { isLoading, comments, setComments } = useGetCommentsInPost(postId);
 
   // Send comment in post
   const handleSendComment = async () => {
@@ -74,6 +57,8 @@ export function SheetComment({ postId }: Props) {
         await updateComment(updateId as string, content, accessToken);
         setUpdateId(null);
         setIsUpdateComment(false);
+        const res = await getAllComments(postId);
+        if (res) setComments(res);
       } else {
         const data: TCommentData = {
           content,
@@ -82,10 +67,10 @@ export function SheetComment({ postId }: Props) {
         };
 
         await createComment(data, accessToken);
+        const res = await getAllComments(postId);
+        if (res) setComments(res);
       }
 
-      const res = await getAllComments(postId);
-      if (res) setComments(res);
       setContent("");
       setIsSending(false);
     } catch (error) {
@@ -119,7 +104,7 @@ export function SheetComment({ postId }: Props) {
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full">
-          <MessageCircleMore className="h-6 w-6" />
+          <MessageCircleMore className="h-5 w-5" />
         </Button>
       </SheetTrigger>
 

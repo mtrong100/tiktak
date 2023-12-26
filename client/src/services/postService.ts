@@ -19,6 +19,17 @@ export const createPost = async (data: TPostData, accessToken: string) => {
   return res.data;
 };
 
+export const deletePost = async (id: string, accessToken: string) => {
+  const res = await axios.delete(
+    `${import.meta.env.VITE_ENDPOINT}/post/delete/${id}`,
+    {
+      headers: { token: `Bearer ${accessToken}` },
+    }
+  );
+
+  return res.data;
+};
+
 export const getAllPosts = async (
   page = queryParams.PAGE,
   limit = queryParams.LIMIT
